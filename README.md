@@ -3,6 +3,13 @@
 * Taken in AY22/23 Semester 2 + ST 1 under Prof Tan Tiow Seng
 * The course runs from  9 Jan 2023 to 16 Jun 2023.
 
+To run IDLE in the Python 3.7.2 virtual environment, activate the virtual environment first before launching IDLE via the command line.
+``` 
+source /Users/fry/Desktop/ozervesh_git/NUS-CS1010X/venv/bin/activate
+python3 -m idlelib.idle
+
+```
+
 | Week | Tutorial topics                                                  |
 |------|------------------------------------------------------------------|
 |1     |Introduction to CS1010X, Basics of Python, Functional Abstraction |                             

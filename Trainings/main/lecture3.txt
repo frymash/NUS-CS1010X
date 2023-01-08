@@ -1,0 +1,37 @@
+
+# Question 4
+
+foo(5)
+2 * 5 + foo(4)
+2 * 5 + 2 * 4 + foo(3)
+...
+10 + 8 + 6 + 4 + 2 + 0
+30
+
+# Question 5
+
+bar(4)
+bar(1) + bar(2) + bar(3)
+2 + 3 + bar(0) + bar(1) + bar(2)
+2 + 3 + 1 + 2 +3
+11
+
+# Question 6
+
+hike(0)
+1 + slide(11)
+1 + hike(8)
+1 + 1 + slide(19)
+1 + 1 + hike(16)
+1 + 1 + 1 + slide(27)
+1 + 1 + 1 + hike(24)
+1 + 1 + 1 + 1 + slide(35)
+1 + 1 + 1 + 1 + hike(32)
+1 + 1 + 1 + 1 + 1 + slide(43)
+
+# Question 7
+
+Numbers that "appear" in code without having any explicit meaning are known as "magic numbers".
+To prevent bugs caused by such numbers and improve readability, assigning these numbers to a variable and using these variable in code instead would be preferred.
+
+However, 0 and 1 are usually exceptions to this rule whenever they are used as base cases, incremental values, or initial values.
