@@ -8,6 +8,7 @@
 
 from runes import *
 from math import sin, cos, pi
+from time import sleep
 
 ##########
 # Task 1 #
@@ -66,7 +67,13 @@ def tree(n,r):
 # Note that sin and cos measure angles in radians
 # Runes should start from 270 deg (3pi/2)
 
-def helix(r,n):
+def helix(r,n,start_angle=-pi/2):
+    """ Returns a helix function that produces a helix with
+    n copies of rune r
+
+    Parameters:
+    r,n, start_angle: refer to loading sign's docstring
+    """
     rune = scale(2/n, r)
     radius = 1/2 - 1/n
     angle = (2*pi) / n # angle between runes
@@ -78,10 +85,11 @@ def helix(r,n):
         Parameters:
         rune_order: the current rune's index in the order of the runes to be drawn;
         posn determines the position of the xth rune.
+        start_angle: refer to helix's docstring
         """
-        return translate(radius * cos(-pi/2 + (angle*(rune_order-1))), \
-                         -radius * sin(-pi/2 + (angle*(rune_order-1))), \
-                         rune)
+        return translate(radius * cos(start_angle + (angle*(rune_order-1))), \
+                        -radius * sin(start_angle + (angle*(rune_order-1))), \
+                        rune)
 
     def draw_runes(rune_order, layers_left):
         """ Draws every rune from the rune_order'th rune to n-1'th rune.
@@ -96,9 +104,9 @@ def helix(r,n):
             return overlay_frac(1/layers_left, \
                                 posn(rune_order), \
                                 draw_runes(rune_order+1, layers_left-1))
-    
+        
     return draw_runes(1, n)
-
+    
 
 # Test
 # show(helix(make_cross(rcross_bb), 9))
