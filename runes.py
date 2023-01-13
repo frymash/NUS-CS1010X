@@ -1,6 +1,6 @@
 def is_list(lst):
 	return isinstance(lst, (list, tuple))
-	
+
 # Constants
 viewport_size = 600 # This is the height of the viewport
 spread = 20 #used to be 20, but i like at 80
@@ -10,7 +10,7 @@ lastframe = None
 import graphics
 import math
 import time
-import images2gif
+import PyGif
 
 Posn = graphics.Posn
 Rgb = graphics.Rgb
@@ -50,14 +50,14 @@ def show(painter):
 
 def scale_vect(mult, p):
 	return Posn(mult*p.x, mult*p.y)
-#translate_posn removed - no one uses it. 
+#translate_posn removed - no one uses it.
 	#Also it only translates on x axis
 
 def transform_posn(frame):
 	def f(posn):
 		return frame.orig + (scale_vect(posn.x/viewport_size, frame.x) + scale_vect(posn.y/viewport_size, frame.y))
 	return f
-	
+
 #this is new - for higher precision rendering
 def inverse_transform_posn(frame):
 	a = frame.x.x
@@ -73,7 +73,7 @@ def inverse_transform_posn(frame):
 		t = list(map(lambda m: m[0]*(posn.x-frame.orig.x) + m[1] * (posn.y-frame.orig.y), inv_mat)) #it's a matrix multiply
 		return Posn(viewport_size*t[0], viewport_size*t[1])
 	return function
-	
+
 ##painters
 def blank_bb(vp, frame):
 	return
@@ -82,8 +82,8 @@ def sail_bb(vp, frame):
 	p = [Posn(viewport_size/2, 0), Posn(viewport_size/2, viewport_size), Posn(viewport_size, viewport_size)]
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), p), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), p),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), p), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
@@ -92,8 +92,8 @@ def corner_bb(vp, frame):
 	p = [Posn(viewport_size/2, 0), Posn(viewport_size,0), Posn(viewport_size, viewport_size/2)]
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), p), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), p),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), p), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
@@ -102,13 +102,13 @@ def black_bb(vp, frame):
 	p = [Posn(0,0), Posn(viewport_size,0), Posn(viewport_size, viewport_size), Posn(0, viewport_size)]
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), p), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), p),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), p), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
-	
-		
+
+
 # // center-and-fill will center and scale a 2x2 image to fill the entire viewport.
 # // This is used by circle-bb, spiral-bb, and ribbon-bb.
 def center_and_fill(p):
@@ -127,8 +127,8 @@ def spiral_bb(vp, frame):
 		angle += offset
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), map(center_and_fill, p)), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), map(center_and_fill, p)),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), map(center_and_fill, p)), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
@@ -142,8 +142,8 @@ def circle_bb(vp, frame):
 		angle+= unit/viewport_size
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), map(center_and_fill, p)), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), map(center_and_fill, p)),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), map(center_and_fill, p)), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
@@ -155,15 +155,29 @@ def pentagram_bb(vp, frame):
 	c1 = math.cos(2*math.pi/5) * unit_offset
 	s2 = math.sin(4*math.pi/5) * unit_offset
 	c2 = math.cos(math.pi/5) * unit_offset
+	a = s2 / (s1 + s2)
+	a_ = 1-a
 	p = [Posn(-s1 + unit_offset, -c1 + unit_offset),\
 			Posn(s1+unit_offset, -c1 + unit_offset),\
 			Posn(-s2+unit_offset, c2+unit_offset),\
 			Posn(unit_offset, 0),\
-			Posn(s2+unit_offset, c2+unit_offset)]
+			Posn(s2+unit_offset, c2+unit_offset)
+			]
+	#converted to 10 element form.
+	p = [p[0],\
+	p[3]*a+p[2]*a_,\
+	p[2],\
+	p[1]*a+p[2]*a_,\
+	p[4],\
+	p[2]*a+p[1]*a_,\
+	p[1],\
+	p[4]*a+p[3]*a_,\
+	p[3],\
+	p[2]*a+p[3]*a_]
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), p), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), p),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), p), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
@@ -177,8 +191,8 @@ def heart_bb(vp, frame):
 	#draws kite
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), p), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), p),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), p), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
@@ -201,11 +215,11 @@ def rcross_bb(vp, frame):
 		Posn(3 * viewport_size / 4, 3 * viewport_size / 4)]
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), p1), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), p1),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
-			draw_solid_polygon(port, map(transform_posn(frame), p2), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), p2),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), p1), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
@@ -229,12 +243,12 @@ def ribbon_bb(vp, frame):
 		angle -= unit
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), map(center_and_fill, p)), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), map(center_and_fill, p)),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), map(center_and_fill, p)), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
-	
+
 def nova_bb(vp, frame):
 	p = [Posn(viewport_size / 2, 0),\
 				Posn(viewport_size / 4, viewport_size / 2),\
@@ -242,12 +256,12 @@ def nova_bb(vp, frame):
 				Posn(viewport_size / 2, viewport_size / 4)]
 	if(is_list(vp[0])):
 		for count, port in enumerate(vp):
-			draw_solid_polygon(port, map(transform_posn(frame), p), 
-				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0), 
+			draw_solid_polygon(port, map(transform_posn(frame), p),
+				Posn((0.3 - frame.z1) * (spread * (((2 * count) / (len(vp) - 1)) - 1)), 0),
                 Rgb(frame.z1, frame.z1, frame.z1))
 	elif (vp != None):
 		draw_solid_polygon(vp, map(transform_posn(frame), p), Posn(0,0), Rgb(frame.z1, frame.z1, frame.z1))
-		
+
 #frame transformation factory
 def process_frame(op, frame):
 	p0 = frame.orig
@@ -255,8 +269,8 @@ def process_frame(op, frame):
 	p2 = frame.y
 	z1 = frame.z1
 	z2 = frame.z2
-	
-	if (op == "bottom_frac"): 
+
+	if (op == "bottom_frac"):
 		def function(frac):
 			return Frame(p0 + scale_vect(1 - frac, p2), p1, scale_vect(frac, p2), z1, z2)
 		return function
@@ -276,7 +290,7 @@ def process_frame(op, frame):
 		return Frame(p0+p2, p1, scale_vect(-1, p2), z1, z2)
 	elif (op == "reduce_2"): # unused in original
 		raise NotImplementedError("reduce_2 is not implemented")
-	elif (op == "rotate"): #bug: Basically old rotate bug.
+	elif (op == "rotate"): 
 		def function(rad):
 			cos_theta = math.cos(rad)
 			sin_theta = math.sin(rad)
@@ -298,16 +312,15 @@ def process_frame(op, frame):
 		return function
 	elif (op == "scale_independent"):
 		def function(ratio_x, ratio_y):
-			gradient = p1+p2
-			scaled_gradient = Posn(((1-ratio_x)/2)* gradient.x, ((1-ratio_y)/2)*gradient.y)
-			center = p0+scaled_gradient
-			return Frame(center, scale_vect(ratio_x, p1), scale_vect(ratio_y, p2), z1, z2)
+			d_xy = (p1*(1-ratio_x)+p2*(1-ratio_y))*0.5
+			center = p0+d_xy
+			return Frame(center, p1 * ratio_x, p2 * ratio_y, z1, z2)
 		return function
 	elif (op == "translate"):
 		def function(x,y):
 			return Frame(p0+scale_vect(x,p1)+scale_vect(y,p2), p1,p2,z1,z2)
 		return function
-		
+
 ##basic painter combinations
 #top, bottom
 def stack_frac(frac, p1, p2):
@@ -401,14 +414,14 @@ def repeat_pattern(n, pat, pic):
 		return pic
 	else:
 		return pat(repeat_pattern(n-1, pat, pic))
-		
+
 
 def stackn(n, painter):
 	if n==1:
 		return painter
 	else:
 		return stack_frac(1/n, painter, stackn(n-1, painter))
-		
+
 def hollusion(painter, ports=None):
 	global active_hollusion
 	frequency = 2
@@ -419,12 +432,12 @@ def hollusion(painter, ports=None):
 		num = 9 #because python is faster than scheme. Used to be 3
 	buffers = list(map(lambda p: graphics.open_pixmap("buffer", 4/3*viewport_size,viewport_size), range(num)))
 	stereo = vp
-	
+
 	def animation(cmd=None):
 		ports = buffers
 		kill = False
 		curr = -1
-		dir = 1 
+		dir = 1
 		def Self(msg):
 			nonlocal kill
 			nonlocal curr
@@ -459,10 +472,10 @@ def anaglyph(painter):
 		MAX_Y = viewport_size
 		stereo = vp
 		depth = graphics.open_pixmap("Depthmap Viewport", viewport_size, viewport_size)
-		
+
 		def get_depth(x,y, pix):
 			return pix[x,y][0]
-				
+
 		painter([lp, rp], unit_frame)
 		#really! if you use getdata(), you need to calculate the offset in the array
 		#load() returns a "2d pixel array" or rather, whatever it returns acts like one for all intents and purposes
@@ -474,12 +487,12 @@ def anaglyph(painter):
 				l = get_depth(x,y,lp_pix)
 				r = get_depth(x,y,rp_pix)
 				pixels[x,y] = (r,l,l)
-		
+
 		graphics.pixels_to_canvas(stereo)
-		
+
 	else:
 		print("PIL does not appear to be available")
-		
+
 def function_to_painter(depth_fun):
 	tolerance = 1/spread
 	def get_depth(x, y, dir, frame): # lp -> dir = -1, rp -> dir = 1
@@ -487,13 +500,12 @@ def function_to_painter(depth_fun):
 		for c in range(0, spread):
 			ox = round(x + (dir * ((-0.3 * spread) + c)))
 			if (ox >= 0 and ox < viewport_size):
-				curr = depth_fun(round(x), round(y))
+				curr = depth_fun(round(ox), round(y))
 				if (curr != 1):
 					curr = frame.z1 + ((frame.z2 - frame.z1) * curr)
 				d = abs(curr - c/spread)
 				if(d < tolerance):
 					result = curr
-					break
 		return result
 	def painter(vp, frame):
 		def ana_out_loop(port, count):
@@ -511,7 +523,8 @@ def function_to_painter(depth_fun):
 						col = 1
 					col = round(col*255)
 					if(col<255):
-						tgtpixels[x,y] = (col, col, col)
+						#tgtpixels[x,y] = (col, col, col)
+						tgtpixels[x,y] = (min(col, tgtpixels[x,y][0]), min(col, tgtpixels[x,y][1]), min(col, tgtpixels[x,y][2]))
 			graphics.pixels_to_canvas(port)
 		if(is_list(vp[0])):
 			for count, port in enumerate(vp):
@@ -528,15 +541,16 @@ def function_to_painter(depth_fun):
 					color = depth_fun(posn.x, posn.y)
 					if(color != 1):
 						color = frame.z1 + ((frame.z2 - frame.z1) * color)
-					if (color>1):	
+					if (color>1):
 						color = 1
 					color = round(color*255)
 					if(color<255): #assuming that white is the transparency color
-						tgtpixels[x,y] = (color, color, color)
+						#tgtpixels[x,y] = (color, color, color)
+						tgtpixels[x,y] = (min(color, tgtpixels[x,y][0]), min(color, tgtpixels[x,y][1]), min(color, tgtpixels[x,y][2]))
 			graphics.pixels_to_canvas(vp)
 	return painter
-	
-		
+
+
 def image_to_painter(filename):
 	img = graphics.load_image(filename)
 	tolerance = 1/spread
@@ -550,7 +564,10 @@ def image_to_painter(filename):
 				for c in range(spread):
 					ox = round(x+dir*(-0.3*spread+c))
 					if(ox>=0 and ox<viewport_size):
-						curr = pixels[ox, y][0]
+						if type(pixels[ox,y]) is int: #this is a workaround for black/white pictures.
+							curr = pixels[ox,y]
+						else:
+							curr = pixels[ox, y][0]
 						d = abs(curr - 255*c/spread)
 						if(d<=tolerance*255):
 							return curr
@@ -587,9 +604,9 @@ def image_to_painter(filename):
 							if(col>255*limit):
 								col = 999
 							else:
-								col = round(frame.z1 + (frame.z2 - frame.z1) * col)
-								col = round(col*255)
-							if(col<=255): 
+								col = round(frame.z1*255 + (frame.z2 - frame.z1) * col)
+							if(col<=255):
+								#tgtpixels[x,y] = (col, col, col)
 								tgtpixels[x,y] = (min(col, tgtpixels[x,y][0]),min(col, tgtpixels[x,y][1]),min(col, tgtpixels[x,y][2]))
 				graphics.pixels_to_canvas(port)
 			pixels = graphics.get_pixels(img)
@@ -597,9 +614,9 @@ def image_to_painter(filename):
 				ana_out_loop(port, ((2*count)/(len(vp)-1) - 1))
 		else:
 			transform = inverse_transform_posn(frame)
-			graphics.blit_pixels(vp, transform, graphics.get_pixels(img), graphics.get_image_size(vp), graphics.get_image_size(img), True) #block level image transfer
+			graphics.blit_pixels(vp, transform, graphics.get_pixels(img), graphics.get_image_size(vp), graphics.get_image_size(img), True, frame.z1, frame.z2) #block level image transfer
 	return painter
-	
+
 from random import random
 
 def stereogram(painter):
@@ -616,7 +633,7 @@ def stereogram(painter):
 	depth_pix = graphics.get_pixels(depthmap)
 	painter(depthmap, unit_frame)
 	Infinity = float("inf")
-	
+
 	depth_pix = graphics.get_pixels(depthmap)
 	def get_depth(x,y):
 		if((x>=(1/6*viewport_size)) and (x<(MAX_X-(1/6*viewport_size)))):
@@ -636,7 +653,7 @@ def stereogram(painter):
 				if(( not(left in link_right) or s<link_right[left]) and (not(right in link_left) or s<link_left[right])):
 					link_right[left] = round(s)
 					link_left[right] = round(s)
-				
+
 		#constraint resolution
 		for x in range(MAX_X):
 			try:
@@ -652,30 +669,32 @@ def stereogram(painter):
 				d = Infinity
 			if(s == Infinity or (s>d)):
 				link_left[x] = 0
-		
+
 		#drawing step
 		for x in range(MAX_X):
 			s = link_left[x] #should be valid for [0, MAX_X-1]
 			try:
-				colour = colours[x-s] 
+				colour = colours[x-s]
 			except KeyError:
 				colour = (round(random()*10/9*255),round(random()*10/9*255),round(random()*10/9*255))
 			pixels[x,y] = colour
 			colours[x] = colour
 	graphics.pixels_to_canvas(stereo)
-		
+
 def save_image(filename):
 	graphics.saveImage(vp, filename)
-	
+
 def save_hollusion(filename):
 	if graphics.PIL_available:
 		if active_hollusion == None:
 			raise("No hollusion active")
 		else:
+			filename += ".gif"
 			frames = list(map(lambda vp: graphics.get_image(vp), active_hollusion("buffer")))
 			rev = frames[1:len(frames)-1]
 			rev.reverse()
 			frames.extend(rev)
-			images2gif.writeGif(filename, frames, duration=1/len(frames), dither=0, subRectangles = False)
+			PyGif.saveAnimated(filename, frames, 1/len(frames))
+			#images2gif.writeGif(filename, frames, duration=1/len(frames), dither=0, subRectangles = False)
 	else:
 		print("PIL does not appear to be available")

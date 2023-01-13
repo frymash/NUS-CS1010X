@@ -38,6 +38,8 @@ class Posn:
 		self.y = y
 	def __add__(self, other): #huehuehue, operator overloading!
 		return Posn(self.x+other.x, self.y+other.y)
+	def __mul__(self, factor):
+		return Posn(self.x*factor, self.y*factor)
 ##viewport/canvas capabilities
 
 #a viewport is rendered bitmap buffer
@@ -49,7 +51,7 @@ def open_viewport(name, horiz, vert):
 	return [vp, image]
 
 #a pixmap is an unrendered pixmap buffer
-	#how to do this is simple - 
+	#how to do this is simple -
 		#everything below a certain screening layer is unrendered.
 		#everything above is. And make sure there's only 1 thing there.
 
@@ -59,12 +61,12 @@ def open_pixmap(name, horiz, vert):
 	vp = Canvas(master, width=horiz, height=vert)
 	image = None
 	if PIL_available:
-		image = Image.new("RGB", (int(horiz), int(vert)), "white") 
+		image = Image.new("RGB", (int(horiz), int(vert)), "white")
 	vp.create_rectangle(viewport_size/6, 0, viewport_size+viewport_size/6, viewport_size, fill="white")
 	vp.place(x=-(viewport_size/6))
 	hide_viewport((vp, image))
 	return [vp, image]
-	
+
 def show_viewport(vp):
 	global visible #apparently no automatic closures.
 	if vp == None:
@@ -73,13 +75,13 @@ def show_viewport(vp):
 		hide_viewport(visible)
 	visible = vp
 	Misc.lift(vp[0], aboveThis = None)
-	
+
 def hide_viewport(vp):
 	global visible #apparently no automatic closures.
 	Misc.lower(vp[0], belowThis=None)
 	if visible == vp and visible != None:
 		visible = None
-	
+
 def clear_viewport(viewport):
 	viewport[0].delete(ALL) #not nearly sure how this works.
 	viewport[0].create_rectangle(viewport_size/6, 0, viewport_size+viewport_size/6, viewport_size, fill="white")
@@ -110,7 +112,7 @@ def draw_solid_polygon(viewport, points, offset, color):
 	if PIL_available:
 		draw = ImageDraw.Draw(viewport[1])
 		draw.polygon(points, fill=color.hexcode())
-	
+
 
 #draw_pixels is removed, wasn't used in the JS code.
 	#probably because it was used only in the 3d rendering code, and that was rewritten.
@@ -143,23 +145,23 @@ def get_pixels(vp):
 	else:
 		raise("PIL does not appear to be available")
 
-def pixels_to_canvas(vp): 
+def pixels_to_canvas(vp):
 	if len(vp) == 2: #why? because PIL doesn't keep a copy of the image, so the moment the function goes out of scope, the image DISAPPEARS.
 		vp.append(ImageTk.PhotoImage(vp[1]))
 	else:
 		vp[2] = ImageTk.PhotoImage(vp[1])
 	vp[0].create_image(0,0,image = vp[2], anchor="nw") #else it forget, and diessss
-	
+
 def get_image(vp):
 	return vp[1]
-	
+
 def square(x):
 	return x*x
-	
+
 def distance(p1, p2):
 	return math.sqrt(square(p1.x-p2.x)+square(p1.y-p2.y))
-	
-def blit_pixels(viewport, inv_transform, pixels, viewport_size, image_size, mono):
+
+def blit_pixels(viewport, inv_transform, pixels, viewport_size, image_size, mono, zmin = 0, zmax = 1):
 	MAX_X = viewport_size[0]
 	MAX_Y = viewport_size[1]
 	IMAX_X = image_size[0]
@@ -172,7 +174,7 @@ def blit_pixels(viewport, inv_transform, pixels, viewport_size, image_size, mono
 			srcy = src.y
 			#simple 2x2 weighted sampling.
 				#weight is inversely proportional to distance.
-				#don't try to use this code for your homework on other modules, 
+				#don't try to use this code for your homework on other modules,
 				#i haven't taken graphics and i wrote this off the top off my head.
 			rsrcx = round(srcx)
 			rsrcy = round(srcy)
@@ -217,10 +219,16 @@ def blit_pixels(viewport, inv_transform, pixels, viewport_size, image_size, mono
 				tcolor = (round((dtgt*tgt[0]+dtgtdx*tgtdx[0]+dtgtdy*tgtdy[0]+dtgtdxdy*tgtdxdy[0])/divisor),\
 				round((dtgt*tgt[1]+dtgtdx*tgtdx[1]+dtgtdy*tgtdy[1]+dtgtdxdy*tgtdxdy[1])/divisor), \
 				round((dtgt*tgt[2]+dtgtdx*tgtdx[2]+dtgtdy*tgtdy[2]+dtgtdxdy*tgtdxdy[2])/divisor))
+				def rescale(color):
+					if color>=254:
+						return 255
+					else:
+						return round(zmin*255 + (zmax-zmin)*color)
+				tcolor = (rescale(tcolor[0]), rescale(tcolor[1]), rescale(tcolor[2]))
 				viewport_pix[x,y] = (min(tcolor[0], viewport_pix[x,y][0]), min(tcolor[1], viewport_pix[x,y][1]), min(tcolor[2], viewport_pix[x,y][2]))
 	pixels_to_canvas(viewport)
-	
-#TODO: test how it renders out of range pixels	
+
+#TODO: test how it renders out of range pixels
 	#no one should up-sample with this algorithm -.-
 # def blit_pixels(viewport, transform, pixels, viewport_size, image_size, mono):
 	# global img_antialias
@@ -274,13 +282,14 @@ def blit_pixels(viewport, inv_transform, pixels, viewport_size, image_size, mono
 	##TODO: enhancement, averaging for points which have been missed out
 	# viewport[1] = tviewport[1].resize((viewport_size[0], viewport_size[1]), Image.ANTIALIAS)
 	# pixels_to_canvas(viewport)
-	
+
 def get_image_size(img):
 	return img[1].size
 def load_image(filename): #returns a vp
 	global img_antialias
 	if PIL_available:
 		img = Image.open(filename)
+		img = img.convert('RGB')
 		width, height = img.size
 		img = img.resize((img_antialias*width, img_antialias*height), Image.BICUBIC)
 		tkcanvas, pilcanvas = open_pixmap(filename, img_antialias*width, img_antialias*height)
