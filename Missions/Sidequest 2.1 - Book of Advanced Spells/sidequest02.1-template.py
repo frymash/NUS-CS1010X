@@ -8,7 +8,6 @@
 
 from runes import *
 from math import sin, cos, pi
-from time import sleep
 
 ##########
 # Task 1 #
@@ -72,7 +71,10 @@ def helix(r,n,start_angle=-pi/2):
     n copies of rune r
 
     Parameters:
-    r,n, start_angle: refer to loading sign's docstring
+    r: the rune to be used
+    n: number of rune copies to be displayed on the canvas
+    start_angle: the angle which the 1st rune will be positioned relative to
+                 the positive x-axis
     """
     rune = scale(2/n, r)
     radius = 1/2 - 1/n
