@@ -8,7 +8,7 @@
 
 from runes import *
 
-# Entry 1 of 3
+# Entry 1 of 1
 # ============
 
 def scarpet(s=1, r=black_bb, cutoff=0.01):
