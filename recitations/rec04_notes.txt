@@ -1,0 +1,110 @@
+def repeated(f,n):
+    """ ((X -> Y), int) -> (X -> Y)
+    """
+    if n == 0:
+        return lambda x: x
+    else:
+        return compose(f, (repeated(f, n-1)))
+
+
+# recursion
+# 1. terminating condition
+# 2. smaller problems(s)
+# 3. carry baggage
+
+
+def count_change(amount):
+    def first_denomination(kinds_of_coins):
+        coins = (1,5,10,20,50)
+        return coins[kinds_of_coins - 1]
+
+    def cc(amounts, kinds_of_coins, baggage):
+        if amount == 0:
+            print(" +++", baggage)
+            return 1
+        elif amount < 0 or kinds_of_coins == 0:
+            return 0
+        else:
+            return cc(amount, kinds_of_coins-1, baggage) + \
+                   cc(amount - first_denomination(kinds_of_coins), kinds_of_coins, baggage + " " + str(first_denomination(kinds_of_coins)))
+
+
+def repeat_pattern(n, pat, pic):
+    if n == 0:
+        return pic
+    else:
+        return pat(repeat_pattern(n-1, pat, pic))
+
+def repeat_pattern(n, pat):
+    def npat(pic):
+        def helper(m, ppat):
+            if m == 0:
+                return pic
+            else:
+                return ppat(helper(m-1, ppat))
+        return helper(n, pat)
+    return npat
+
+
+Things to watch out:
+1. Scoping of parameters
+   
+   - Python has a "forgiveness attitude" (lexical scoping); if the variable you want to reference can't be found in the current block scope, Python will look for the variable in the global scope.
+
+2. lambda will be used often as it's a shorthand to write functions without giving it a name.
+
+3. Syntax vs semantics
+
+
+
+blur king example
+
+def blur(x):
+    return lambda x: x**2
+
+def king(x):
+    return lambda x: x+2
+
+
+print(blur(king(king(king)))(2)) -> 16
+
+Due to the lambda in the function, chaining the king functions won't be any different from a single king function.
+
+"Chaining" would work if blur and king were defined as:
+
+def blur(x):
+    return x**2
+
+def king(x):
+    return x+2
+
+def my_sum(n):
+    if n >= 1:
+        if n == 1:
+            return 2   # 1*2
+        else:
+            return (n * (n+1)) + my_sum(n-1)
+    else:
+        return 0
+
+
+T1: lambda x: x * (x+1)
+T2: 1
+T3: lambda a: a+1
+T4: n
+
+T1: lambda x,y: x+y
+T2: lambda x: x * (x+1)
+T3: n
+
+def my_sum(n):
+    return fold(lambda x,y: x+y, lambda x: x * (x+1), n)
+
+def fold(op, f, n):
+    result = f(0)
+    term_num = 1
+    while term_num <= n:
+        result = op(f(term_num), result)
+        term_num += 1
+    return result
+
