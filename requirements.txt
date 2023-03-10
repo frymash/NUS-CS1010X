@@ -1,2 +1,5 @@
 pillow
 icecream
+numpy
+matplotlib
+scipy
