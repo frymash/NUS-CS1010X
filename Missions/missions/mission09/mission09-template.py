@@ -43,7 +43,13 @@ def accumulate(fn, initial, seq):
 def search(x, seq):
     """ Takes in a value x and a sorted sequence seq, and returns the
     position that x should go to such that the sequence remains sorted """
-    return
+    curr_index = 0
+    for element in seq:
+        if x <= element:
+            break
+        else:
+            curr_index += 1
+    return curr_index
 
 print("## Q1a ##")
 print(search(-5, (1, 5, 10)))
@@ -67,7 +73,26 @@ def binary_search(x, seq):
     """ Takes in a value x and a sorted sequence seq, and returns the
     position that x should go to such that the sequence remains sorted.
     Uses O(lg n) time complexity algorithm."""
-    return
+    def helper(low, high):
+        if low > high:
+            return False
+        else:
+            mid = (low + high) // 2
+            mid_value = seq[mid]
+            if x == mid_value:
+                return mid
+            elif low == high:
+                if x > mid_value:
+                    return mid + 1
+                else:
+                    return mid
+            elif x < mid_value:
+                return helper(low, mid-1)
+            else:
+                return helper(mid+1, high)
+        
+    return helper(0, len(seq)-1)
+    
 
 print("## Q1b ##")
 print(binary_search(-5, (1, 5, 10)))
@@ -90,7 +115,9 @@ print(binary_search(42, (-5, 1, 3, 5, 7, 10)))
 def insert_list(x, lst):
     """ Inserts element x into list lst such that x is less than or equal
         to the next element and returns the resulting list."""
-    return
+    index = search(x, lst)
+    lst.insert(index, x)
+    return lst
 
 print("## Q2a ##")
 print(insert_list(2, [1, 5, 9]))
@@ -107,7 +134,10 @@ print(insert_list(5, [2, 6, 8]))
 def insert_tup(x, tup):
     """ Inserts element x into tuple tup such that x is less than or equal
         to the next element and returns the resulting tuple."""
-    return
+    index = search(x, tup)
+    first_piece = tup[:index]
+    second_piece = tup[index:]
+    return first_piece + (x,) + second_piece
 
 print("## Q2b ##")
 print(insert_tup(2, (1, 5, 9)))
@@ -128,17 +158,28 @@ output_lst = insert_list(7, lst)
 
 print("## Q2c ##")
 print(tup is output_tup)
-#=> Output:
+#=> Output: False
 print(tup == output_tup)
-#=> Output:
+#=> Output: False
 
 print(lst is output_lst)
-#=> Output:
+#=> Output: True
 print(lst == output_lst)
-#=> Output:
+#=> Output: True
 #=> Explain the outputs:
 #=>
+#=> In the line output_tup = insert_tup(7, tup), insert_tup creates a copy of
+#=> tup with 7 inserted into it. This copy will then be assigned to output_tup.
+#=> The original tup will remain unmodified. This means that tup and output_tup
+#=> will point to different objects, hence tup is not output_tup. Since
+#=> tup's value remains as (5,4,10) and output_tup's value is (5,4,7,10),
+#=> tup != output_tup.
 #=>
+#=> In the line output_lst = insert_list(7, lst) insert_list inserts 7 into
+#=> its original input list lst and returns lst. lst's address in memory is
+#=> then assigned to output_lst. This means both lst and output_lst
+#=> will point to the same object, hence lst is output_lst and 
+#=> lst == output_lst. 
 
 
 ###########
@@ -147,7 +188,12 @@ print(lst == output_lst)
 
 def sort_list(lst):
     """ Sorts list lst in ascending order."""
-    return
+    if len(lst) <= 1:
+        return lst
+    else:
+        list_head = lst[0]
+        sorted_list_tail = sort_list(lst[1:])
+        return insert_list(list_head, sorted_list_tail)
 
 print("## Q3a ##")
 print(sort_list([9, 6, 2, 4, 5]))
@@ -163,7 +209,7 @@ print(sort_list(["turtle", "penguin", "dog", "cat", "ant eater", "butterfly"]))
 # Task 3b #
 ###########
 
-#=> Time complexity of sort_list:
+#=> Time complexity of sort_list: O(n^2)
 
 ###########
 # Task 3c #
@@ -171,7 +217,13 @@ print(sort_list(["turtle", "penguin", "dog", "cat", "ant eater", "butterfly"]))
 
 def sort_tup(tup):
     """ Sorts tuple tup in an ascending order."""
-    return
+    if len(tup) <= 1:
+        return tup
+    else:
+        tup_head = tup[0]
+        sorted_tup_tail = sort_tup(tup[1:])
+        return insert_tup(tup_head, sorted_tup_tail)
+        
 
 print("## Q3c ##")
 print(sort_tup((9, 6, 2, 4, 5)))
@@ -200,6 +252,17 @@ def insert_animate(block_pos, shelf, high):
     NOTE: To actually see the animation, please uncomment the testing function
     below.
     """
+    def find_new_pos(target_block):
+        block_sizes = [block.size for block in shelf]
+        block_sizes_up_to_high = block_sizes[:high]
+        # print(f"target_block.size: {target_block.size}")
+        # print(f"block_sizes: {block_sizes}")
+        new_pos = search(target_block.size, block_sizes_up_to_high)
+        return new_pos
+    
+    block = shelf.pop(block_pos)
+    new_pos = find_new_pos(block)
+    shelf.insert(new_pos, block)
     # optional to return shelf but we do this for debugging
     return shelf
 
@@ -221,11 +284,13 @@ def test_insert_animate():
     # => [Block size: 1, Block size: 2, Block size: 4, Block size: 6, Block size: 8, Block size: 3, Block size: 9]
 
 # Uncomment function call to test insert_animate()
-#test_insert_animate()
+# test_insert_animate()
 
 ###########
 # Task 4b #
 ###########
+
+# def insert_animate(block_pos, shelf, high):
 
 def sort_me_animate(shelf):
     """
@@ -236,7 +301,11 @@ def sort_me_animate(shelf):
     below.
 
     """
-    # optional to return shelf but we do this for debugging
+    shelf_len = len(shelf)
+    sorted_portion_len = 1
+    while sorted_portion_len < shelf_len:
+        insert_animate(sorted_portion_len, shelf, sorted_portion_len)
+        sorted_portion_len += 1
     return shelf
 
 # Test cases for sort_me_animate
@@ -261,5 +330,5 @@ def test_sort_me_with_duplicates():
     # => [Block size: 1, Block size: 1, Block size: 2, Block size: 3, Block size: 3, Block size: 4]
 
 # Uncomment function call to test sort_me_animate()
-#test_sort_me_animate()
-#test_sort_me_with_duplicates()
+test_sort_me_animate()
+test_sort_me_with_duplicates()
