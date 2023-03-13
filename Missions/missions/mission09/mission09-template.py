@@ -253,8 +253,7 @@ def insert_animate(block_pos, shelf, high):
     below.
     """
     def find_new_pos(target_block):
-        block_sizes = [block.size for block in shelf]
-        block_sizes_up_to_high = block_sizes[:high]
+        block_sizes_up_to_high = [block.size for block in shelf[:high]]
         # print(f"target_block.size: {target_block.size}")
         # print(f"block_sizes: {block_sizes}")
         new_pos = search(target_block.size, block_sizes_up_to_high)
@@ -284,7 +283,7 @@ def test_insert_animate():
     # => [Block size: 1, Block size: 2, Block size: 4, Block size: 6, Block size: 8, Block size: 3, Block size: 9]
 
 # Uncomment function call to test insert_animate()
-# test_insert_animate()
+test_insert_animate()
 
 ###########
 # Task 4b #
