@@ -1,0 +1,31 @@
+recitation 7
+
+rectangular vs polar complex numbers: which form do we use?
+
+depends on a few factors like
+1. time/space complexity
+2. what data we have on have
+
+
+minimum time required for a dense matrix operation is the number of elements
+in the matrix. assuming n rows and m columns, the min. time complexity of a 
+matrix operation would be O(n*m)
+
+sparse matrices are meant to reduce the number of zeroes in matrices.
+given a dense matrix with a ton of zeroes, the sparse matrix will only
+include the non-zero entries from the dense matrix.
+the min. time complexity of a dense matrix operation would be O(n), where n
+is the number of non-zero entries in the matrix
+
+if you multiply a n*m matrix by a m*l matrix, each entry in the product
+matrix will take O(m) time to compute. 
+given that the product matrix has n*l entries, the net time complexity
+required to produce the product matrix is O(m*n*l) => O(n^3)
+
+n^0.0000000000001 vs log n; which produces the lower time complexity
+
+when you see information take a certain form, you cannot immediately decide which
+data structure to use. you also need to discern which functions you want to use
+on the info, how often you use such functions, and how you want to use/manipulate the info.
+once you figure these out, you can 
+
