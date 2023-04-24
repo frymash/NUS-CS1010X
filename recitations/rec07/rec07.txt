@@ -27,5 +27,5 @@ n^0.0000000000001 vs log n; which produces the lower time complexity
 when you see information take a certain form, you cannot immediately decide which
 data structure to use. you also need to discern which functions you want to use
 on the info, how often you use such functions, and how you want to use/manipulate the info.
-once you figure these out, you can 
+once you figure these out, you can then decide which data structure to use.
 
