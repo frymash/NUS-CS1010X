@@ -1,7 +1,9 @@
 # Question 1
 def make_widget():
+    # You can't access stuff without using the functions
+    # provided via oplookup
     stuff = ["empty", "empty", 0]
-    def oplookup(msg,*args):
+    def oplookup(msg, *args):
         if msg == "insert":
             place = stuff[2]
             stuff[place] = args[0]
@@ -38,10 +40,25 @@ widget("insert", 3)
 def make_accumulator():
     result = 0
     def accumulate(n):
+        # A keyword that accesses a variable that is not
+        # in scope. But notice that if result is a list,
+        # you can modify its elements just fine without the 
+        # need to use the nonlocal keyword because result 
+        # itself will never be reassigned -- 
+        # its references will be reassigned instead.
         nonlocal result
         result += n
         return result
     return accumulate
+
+"""
+def make_accumulator():
+    result = [0]
+    def acc(n):
+        result[0] = result[0] + n
+        return result[0]
+    return acc
+"""
 
 # Question 3
 
@@ -122,7 +139,7 @@ def make_monte_carlo_integral(pred,x1,y1,x2,y2):
                 return integral
     return oplookup
 
-"""
+
 circle_estimate = make_monte_carlo_integral(circle, -1,-1,1,1)
 circle_estimate("run trials", 1000)
 print(circle_estimate("trials"))
@@ -130,12 +147,26 @@ print(circle_estimate("get estimate"))
 circle_estimate("run trials", 10000)
 print(circle_estimate("trials"))
 print(circle_estimate("get estimate"))
-"""
 
 
 # Question 5
 
 # (a)
+
+def translate(source, dest, string):
+    dic = dict(zip(source, dest))
+    return "".join(map(lambda c: dic[c] if c in dic else c, string))
+
+'''
+# Implementations w/o dictionaries:
+def translate(source, dest, string):
+    string = list(string)
+    for i, char in enumerate(string):
+        for j, src in enumerate(source):
+            if char == src:
+                string[i] = dest[j]
+    return "".join(string)
+
 def translate(source, destination, string):
     """ (str, str, str) -> str
 
@@ -149,12 +180,21 @@ def translate(source, destination, string):
         target_index = string.find(old_letter)
         string = string[:target_index] + new_letter + string[target_index+1:]
     return string
+'''
 
-print(translate("dikn", "lvei","My tutor IS kind"))
+print(translate("dikn", "lvei","My tutor IS kind"))
 
 # (b)
 from string import ascii_lowercase, ascii_uppercase
 
+def caesar_cipher(shift, string):
+    s = shift % 26
+    l, c = ascii_lowercase, ascii_uppercase
+    tl = l[s:] + l[:s]
+    tc = c[s:] + c[:s]
+    return translate(l + c, tl + tc, string)
+
+'''
 def caesar_cipher(n, string):
     """ (int, str) -> str
     """
@@ -178,10 +218,6 @@ def caesar_cipher(n, string):
             source += old_letter
             destination += new_letter
     return translate(source, destination, string)
+'''
 
 print(caesar_cipher(29, "aAbB"))
-            
-
-
-
-
