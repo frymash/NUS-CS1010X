@@ -227,7 +227,7 @@ def install_rational_package():
     def is_zero_rat(x):
         """ (RepRat) -> Boolean
         """
-        return numer(x) == 0
+        return is_zero(numer(x))
 
     def is_eq_rat(x, y):
         """ (RepRat, RepRat) -> Boolean
