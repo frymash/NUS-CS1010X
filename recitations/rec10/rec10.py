@@ -75,6 +75,9 @@ def memo_choose(n,k):
 
 # Dynamic programming version of choose
 def dp_choose(n,k):
+    # Don't use list comprehension to build the table.
+    # Doing so will make each row in the table an alias
+    # of the first row.
     row = [1] * (k+1)
     table = []
 
@@ -278,5 +281,3 @@ def dp_cut_rod(n, prices):
     return max_price[n][len(prices)]
 
 print(dp_cut_rod(10, prices))
-            
-                

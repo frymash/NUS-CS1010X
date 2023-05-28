@@ -1,0 +1,82 @@
+RECITATION 12
+
+1. Teaching review
+9-15 June 2023 @ Canvas
+
+2. More than 50% of the class should score B+ and above.
+
+MAJOR CONCEPTS
+
+#1 (FE Q1, 2 marks)
+CS = Data Structures + Algorithms
+Data stuctures -> the ingredients; take up space
+Algorithms -> the recipe; take up time
+
+Evaluating program:
+- Expand functions till the end before expansion
+- Evaluate parameters of functions before expansion
+
+Computer programs consist of 3 kinds of statements:
+- Sequential
+- Conditional
+- Looping
+
+
+#2 (FE Q2, 2 marks)
+Tracing program:
+- Syntactically vs semantically
+  - Tables, pictures, variables....with proper bookkeeping.
+ 
+- Past example used for tracing: parallel prefix (not tested this time)
+- You can trace the program for a small number of times before getting some sense of its meaning.
+- After you get the rough idea of how the program works, you will not havae to do the difficult work of continuing the tracing.
+- You can use your understanding to figure the final answer out.
+
+
+#3 (FE Q4, multiple representations; PE Q2)
+Program development (PE)
+- Planning is important
+- Planning will help you gradually move towards your answer
+- Move towards your answer step by step instead of trying to take one
+huge step to get to your answer.
+- Think about which data structures you will need to use as well.
+- Invest in "debugging codes".
+
+
+#4 (FE Q5, Q7)
+Computational problem solving
+- Wishful thinking (top down thinking)
+- Dynamic programming (bottom up thinking)
+- WT and DP are just 2 of many paradigms that are used for problem solving
+- Incremental development
+- Signal processing view of computation
+  - 5 stages: Map, Filter, Accumulate, Searching, Sorting
+
+#5 (everywhere in FE)
+Computational resources:
+- Time and space
+- Doesn't concern the explicit timing or amount of space that the functions takes up while running
+- Concerned with orders of growth
+
+#6 (FE Q3, PE Q1)
+Types of processing in big data (Google, FB, Insta...)
+Filtering and accumulating
+
+#7 (FE Q6 Java, PE Q3)
+OOP concepts
+- Inheritance (not writing repeated code)
+- Polymorphism (using the same names for multiple functions)
+- Encapsulation (hiding unnecessary details)
+
+#8 (PE Q5)
+Counting (CS1231S)
+- You do not want to undercount or overcount
+- Overcounting: 2 sets of data overlap. The overlapping data is counted twice.
+- There are multiple ways to count the same thing.
+- Data must pivot from a certain point.
+
+
+FE good practices:
+1. Look through all the questions and start with what you are most familiar with first
+2. Q1 is the easiest (2 marks)
+3. Use pencil!
