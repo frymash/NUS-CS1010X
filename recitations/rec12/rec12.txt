@@ -29,7 +29,7 @@ Tracing program:
  
 - Past example used for tracing: parallel prefix (not tested this time)
 - You can trace the program for a small number of times before getting some sense of its meaning.
-- After you get the rough idea of how the program works, you will not havae to do the difficult work of continuing the tracing.
+- After you get the rough idea of how the program works, you will not have to do the difficult work of continuing the tracing.
 - You can use your understanding to figure the final answer out.
 
 

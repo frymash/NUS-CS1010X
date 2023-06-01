@@ -155,7 +155,7 @@ def dp_cc(amount, num_of_coins):
     table = []
 
     # DO NOT INITIALIZE THE TABLE USING A LIST COMPREHENSION
-    # OTHERWISE EVERY ROW WILL POINT TO THE SAME REFERENCE IN MEMORU
+    # OTHERWISE EVERY ROW WILL POINT TO THE SAME REFERENCE IN MEMORY
     # table = [row for i in range(amount+1)]
 
     for i in range(amount+1):
