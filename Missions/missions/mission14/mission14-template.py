@@ -160,7 +160,7 @@ class Animal(LivingThing):
         if not threshold:
             self.threshold = random.randint(1,4)
         else:
-            self.threshold = threshold
+            self.threshold = threshold[0]
 
     def get_food_value(self):
         return self.food_value
@@ -253,7 +253,10 @@ class Tribute(Person):
     def attack(self, living_thing, weapon):
         """ (LivingThing, Weapon) -> None
         """
-        if weapon in self.get_inventory():
+        if weapon in self.get_inventory() and \
+          self.get_place() is living_thing.get_place():
+            # print(f"self.get_place(): {self.get_place()}")
+            # print(f"living_thing.get_place(): {living_thing.get_place()}")
             dmg = weapon.damage()
             living_thing.reduce_health(dmg)
 
@@ -357,7 +360,7 @@ def test_task3():
     print(named_col(cc.get_medicine()))    # ('aloe vera',)
 
 # Uncomment to test task 3
-test_task3()
+# test_task3()
 
 def test_task4():
     print("===== Task 4 ======")
