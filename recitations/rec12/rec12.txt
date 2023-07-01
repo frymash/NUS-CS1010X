@@ -80,3 +80,11 @@ FE good practices:
 1. Look through all the questions and start with what you are most familiar with first
 2. Q1 is the easiest (2 marks)
 3. Use pencil!
+
+FE
+Q1 Warm-up (2 marks)
+Q2 Code tracing (2 marks)
+Q3 HOF/Signal processing view
+Q4 Multiple representations
+Q5 Wishful thinking/DP/Signal processing view
+Q6 Java OOP
