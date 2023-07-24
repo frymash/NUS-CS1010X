@@ -399,16 +399,15 @@ class Matrix(object):
     def multiply(self, m2):
         """ (Matrix) -> Matrix
         """
-        result = Matrix(self.nrows, m2.ncols)
-        # print(result.dict2list())
-        for i in range(result.nrows):
-            for j in range(result.ncols):
-                # val = self.get((i, 0)) * m2.get((0, j))
-                # print(f"i: {i}, j: {j} | val: {val}")
-                val = sum(self.get((i,x)) for x in range(self.ncols)) \
-                      * sum(m2.get((y,j)) for y in range(m2.nrows))
-                result.insert((i,j), val)
-        return result
+        res = [[0] * len(m1) for i in range(len(m2[0]))]
+        for i in range(len(res)):
+            for j in range(len(res[0])):
+                val = 0
+                for k in range(len(m1[0])):
+                    val += m1[i][k] * m2[k][j]
+                res[i][j] = val
+
+        return res
 
 print("\n*** Question 12 ***")
 

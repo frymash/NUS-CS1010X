@@ -370,7 +370,7 @@ class Student:
             return 1
 
         count = 1
-        loop_detect = []
+        loop_detect = [] # essentially shows which students "nodes" have already been visited
         while True:
             new_friends = []
             count +=1

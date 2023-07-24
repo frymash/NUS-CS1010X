@@ -288,64 +288,34 @@ topMostLst = create_top(topLst)
 
 print("Current topMostLst:", all_keys(topMostLst))
 
-# from time import sleep
 
-# def search(topMostLst, num):
-#     """ (Node) -> String
-#     """
-#     def paths(topMostLst, num):
-#         """ (Node, int) -> List[List[Node]]
-
-#         Returns a list of possible paths that could be taken
-#         to get from topMostLst to num
-#         """
-#         curr = topMostLst.after
-#         result = []
-#         curr_path = [topMostLst]
-#         visited = [topMostLst]
-#         to_visit = [curr.after]
-
-#         while to_visit:
-#             curr = to_visit.pop()
-#             visited.append(curr)
-#             curr_path.append(curr)
-#             if curr.num == num:
-#                 result.append(curr_path)
-#             else:
-#                 for neighbour in [curr.before, curr.below, curr.after]:
-#                     if (neighbour is not None) or neighbour.num <= num:
-#                         to_visit.append(neighbour)
-
-#         return result
-
-    # filtered_paths = list(map(lambda path: sorted(list(set(path))), paths(topMostLst, num)))
-    # result = "-".join(list(map(lambda i: str(i), \
-    #                         min(filtered_paths, key=len))))
-    # return result
-
-
-
-    # curr = topMostLst
-    # visited = []
-
-    # # Special case: 1st node
-    # if curr.num >= num:
-    #     return curr.num
-    # visited.append(curr.num)
-    # curr = curr.after
-
-    # while curr.num != num and curr.after is not None:
-    #     visited.append(curr.num)
-    #     if num < curr.num and curr.below is not None:
+def search(topMostLst, num):
+    if type(topMostLst) != Node:
+        return ""
+    
+    visited = []
+    curr = topMostLst
+    while True:
+        if curr.num == num:
+            visited.append(curr.num)
+            break
+        elif curr.num < num:
+            visited.append(curr.num)
+            if curr.after:
+                curr = curr.after
+            elif curr.before:
+                curr = curr.before
+            else:
+                break
+        else: # num < curr.num
+            if curr.before and curr.before.bottom:
+                curr = curr.before.bottom
+            else:
+                visited.append(curr.num)
+                break
+    return visited
+    # return "-".join(map(str, sorted(set(visited))))
             
-    #     elif num > curr.num:
-            
-    #     # print(visited)
-    #     # print(curr.num, end="")
-    #     # sleep(0.3)
-    # visited.append(curr.num)
-    # result = "-".join(list(map(lambda i: str(i), sorted(list(set(visited))))))
-    # return result
 
 # for i in range(25):
 #     print("searching using 1 list", i, ":", search(lst, i))    
@@ -353,8 +323,8 @@ print("Current topMostLst:", all_keys(topMostLst))
 # for i in range(25):
 #     print("searching using 2 lists", i, ":", search(topLst, i))    
 
-# for i in range(25):
-#    print("searching using 3 lists", i, ":", search(topMostLst, i))
+for i in range(25):
+   print("searching using 3 lists", i, ":", search(topMostLst, i))
 
 
 

@@ -165,7 +165,7 @@ def testTribes():
     T.conquer(10, 11)
     print(T.is_same_tribe(20, 11))
 
-# testTribes()
+testTribes()
 
 
 #----------------
@@ -177,6 +177,7 @@ def testTribes():
 def nodes_in_subtree(tree, root, child):
     pass
 
+"""
 def subtree_distance(tree):
     # Base case: leaf
     if len(tree) - tree.count(False) == 1:
@@ -198,6 +199,7 @@ def subtree_distance(tree):
         right = []
         
         return 1 + max(subtree_distance(left), subtree_distance(right)
+        """
 
 # print(subtree_distance([-1, 0, 0, 1, 2, 2, 5]))
 
