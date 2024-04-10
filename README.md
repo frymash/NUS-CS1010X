@@ -10,13 +10,6 @@ Firstly, clone this repository in your machine.
 git clone git@github.com:ozervesh/NUS-CS1010X.git
 ```
 
-This repository is packaged with a pre-configured virtual environment that can run Python 3.7.2 (which this course is currently being taught in).
-
-Please remember to activate the virtual environment to use Python 3.7.2 if it is not installed on your machine.
-```
-source ./venv/bin/activate
-```
-
 ## 2. Running IDLE
 
 If you install Python 3.7.2 through asdf or are running it through a virtual environment, it may be difficult to find IDLE for Python 3.7.2.
